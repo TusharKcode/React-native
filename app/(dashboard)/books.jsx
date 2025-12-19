@@ -18,7 +18,7 @@ const Books = () => {
 export default Books
 
 const styles = StyleSheet.create({
-    contanier:{
+    container:{
         flex:1,
         justifyContent:"center",
         alignItems:"stretch",

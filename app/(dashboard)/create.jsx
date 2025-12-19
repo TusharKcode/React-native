@@ -18,7 +18,7 @@ const Create = () => {
 export default Create
 
 const styles = StyleSheet.create({
-    contanier:{
+    container:{
         flex:1,
         justifyContent:"center",
         alignItems:"center",

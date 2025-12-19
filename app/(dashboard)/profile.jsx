@@ -20,7 +20,7 @@ const Profile = () => {
 export default Profile
 
 const styles = StyleSheet.create({
-    contanier:{
+    container:{
         flex:1,
         justifyContent:"center",
         alignItems:"center",
