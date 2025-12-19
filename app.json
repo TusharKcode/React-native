@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme":"reactNative",
     "name": "React-Native",
     "slug": "React-Native",
     "version": "1.0.0",
