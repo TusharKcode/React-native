@@ -6,8 +6,6 @@ import Spacer from '../../components/Spacer'
 const Books = () => {
   return (
     <ThemedView style={styles.container} safe={true}>
-
-        <Spacer/>
         <ThemeText title={true} style={styles.heading}>
             Your Reading List
         </ThemeText>
