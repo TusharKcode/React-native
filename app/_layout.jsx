@@ -1,9 +1,9 @@
 import { StyleSheet, Text, useColorScheme, View } from 'react-native'
-import React from 'react'
 import { Stack } from 'expo-router'
 import { Colors } from '../constants/Colors'
 import { StatusBar } from 'expo-status-bar'
-import {Ionicons} from '@expo/vector-icons'
+import 'react-native-url-polyfill/auto'
+
 
 const RootLayout = () => {
 
