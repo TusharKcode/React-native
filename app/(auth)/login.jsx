@@ -7,13 +7,20 @@ import Spacer from '../../components/Spacer'
 import ThemedButton from '../../components/ThemedButton'
 import ThemedTextInput from '../../components/ThemedTextInput'
 import { useState } from 'react'
+import { useUser } from '../../hooks/useUser'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const handleSubmit = () => {
-        console.log("Login form submitted", email, password)
+    const { login } = useUser()
+
+    const handleSubmit = async() => {
+        try {
+            await login(email, password)
+        } catch (error) {
+            
+        }
     }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

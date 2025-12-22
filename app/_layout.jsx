@@ -3,6 +3,7 @@ import { Stack } from 'expo-router'
 import { Colors } from '../constants/Colors'
 import { StatusBar } from 'expo-status-bar'
 import 'react-native-url-polyfill/auto'
+import { UserProvider } from '../contexts/UserContext'
 
 
 const RootLayout = () => {
@@ -12,7 +13,7 @@ const RootLayout = () => {
 
   return (
     // Header Shown use to disable header of the pages, use boolean value TRUE/FALSE
-  <>
+  <UserProvider>
     <StatusBar value="auto"/>
     <Stack
       screenOptions={{
@@ -24,7 +25,7 @@ const RootLayout = () => {
       <Stack.Screen name="(auth)" options={{headerShown:false}}/>
       <Stack.Screen name="(dashboard)" options={{headerShown:false}}/>
     </Stack>
-  </>
+  </UserProvider>
   )
 }
 
