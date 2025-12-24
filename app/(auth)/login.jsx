@@ -1,13 +1,13 @@
 import { TouchableWithoutFeedback, StyleSheet, Text, Keyboard } from 'react-native'
 import { Link } from 'expo-router'
 import { Colors } from '../../constants/Colors'
+import { useState } from 'react'
+import { useUser } from '../../hooks/useUser'
 import ThemeText from '../../components/ThemeText'
 import ThemedView from '../../components/ThemedView'
 import Spacer from '../../components/Spacer'
 import ThemedButton from '../../components/ThemedButton'
 import ThemedTextInput from '../../components/ThemedTextInput'
-import { useState } from 'react'
-import { useUser } from '../../hooks/useUser'
 
 const Login = () => {
     const [email, setEmail] = useState('')
