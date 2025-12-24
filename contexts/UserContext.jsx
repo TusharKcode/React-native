@@ -29,7 +29,7 @@ export function UserProvider({ children }){
 
     async function logout() {
         await account.deleteSession("current")
-        setUser[null]
+        setUser(null)
     }
 
     async function getInitialUserValue() {
@@ -37,7 +37,7 @@ export function UserProvider({ children }){
             const response = await account.get()
             setUser(response)
         } catch (error) {
-            setUser[null]
+            setUser(null)
         } finally{
             setAuthChecked(true)
         }
