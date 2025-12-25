@@ -33,7 +33,7 @@ export function BooksProvider({ children }){
             const newBook = await databases.createDocument(
                 DATABASE_ID,
                 TABLE_ID,
-                ID.unique,
+                ID.unique(),
                 {...data, userId: user.$id},
                 [
                     Permission.read(Role.user(user.$id)),
