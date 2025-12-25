@@ -59,7 +59,7 @@ const Create = () => {
         <Spacer/>
 
         <ThemedTextInput
-            style={styles.input}
+            style={styles.multiline}
             placeholder="Book Description"
             value={description}
             onChangeText={setDescription}
