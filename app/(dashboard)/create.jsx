@@ -1,9 +1,11 @@
-import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native'
 import { useState } from 'react'
 import { useBooks } from '../../hooks/useBooks'
 import { useRouter } from 'expo-router'
 import ThemedView from '../../components/ThemedView'
 import ThemeText from '../../components/ThemeText'
+import ThemedButton from '../../components/ThemedButton'
+import ThemedTextInput from '../../components/ThemedTextInput'
 import Spacer from '../../components/Spacer'
 
 const Create = () => {
