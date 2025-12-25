@@ -1,6 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { databases } from "../lib/appwrite";
-import { ID, Permission, Role } from "appwrite";
+import { ID, Permission, Query, Role, TablesDB } from "appwrite";
 import { useUser } from "../hooks/useUser";
 
 const DATABASE_ID = "694cc7e9001175545be8"
@@ -14,7 +14,15 @@ export function BooksProvider({ children }){
 
     async function fetchBooks() {
         try {
-            
+            const response = await databases.listDocuments(
+                DATABASE_ID,
+                TABLE_ID,
+                [
+                    Query.equal("userId", user.$id)
+                ]
+            )
+            setBooks(response.documents)
+            console.log(response.documents)
         } catch (error) {
             console.error(error.message)
         }
@@ -53,6 +61,14 @@ export function BooksProvider({ children }){
             console.error(error.message)
         }
     }
+
+    useEffect(() => {
+        if (user) {
+            fetchBooks()
+        } else{
+            setBooks([])
+        }
+    }, [user])
 
     return(
         <BooksContext.Provider
