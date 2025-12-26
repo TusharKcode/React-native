@@ -45,7 +45,7 @@ export function BooksProvider({ children }) {
     if (!user) return;
 
     try {
-      await databases.createDocument(
+      const response = await databases.createDocument(
         DATABASE_ID,
         COLLECTION_ID,
         ID.unique(),
@@ -56,6 +56,8 @@ export function BooksProvider({ children }) {
           Permission.delete(Role.user(user.$id)),
         ]
       );
+      // Manually update state for immediate feedback
+      setBooks((prev) => [response, ...prev]);
     } catch (error) {
       console.error("Create book error:", error.message);
     }
@@ -68,6 +70,8 @@ export function BooksProvider({ children }) {
         COLLECTION_ID,
         id
       );
+      // Manually update state for immediate feedback
+      setBooks((prev) => prev.filter((book) => book.$id !== id));
     } catch (error) {
       console.error("Delete book error:", error.message);
     }
@@ -77,22 +81,32 @@ export function BooksProvider({ children }) {
     let unsubscribe
     const channel = `databases.${DATABASE_ID}.collections.${COLLECTION_ID}.documents`
 
-    if(user){
+    if (user) {
       fetchBooks()
       unsubscribe = client.subscribe(channel, (response) => {
-        const {payload, events} = response
-        if(events[0].includes('create')){
-          setBooks((prevBooks) => [...prevBooks, payload])
-        }
-        if(events[0].includes('delete')){
-          setBooks((prevBooks) => prevBooks.filter((book) => book.$id !== payload.$id))
+        const { payload, events } = response
+
+        if (events && Array.isArray(events)) {
+          // Use .some() to check if any event matches create or delete
+          if (events.some(e => e.includes('create'))) {
+            setBooks((prevBooks) => {
+              // Prevent duplicate entries if already added manually
+              const exists = prevBooks.find(b => b.$id === payload.$id);
+              if (exists) return prevBooks;
+              return [payload, ...prevBooks];
+            })
+          }
+
+          if (events.some(e => e.includes('delete'))) {
+            setBooks((prevBooks) => prevBooks.filter((book) => book.$id !== payload.$id))
+          }
         }
       })
-    } else{
+    } else {
       setBooks([])
     }
     return () => {
-      if(unsubscribe) unsubscribe()
+      if (unsubscribe) unsubscribe()
     }
   }, [user]);
 
