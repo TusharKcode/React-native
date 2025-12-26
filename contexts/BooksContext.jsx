@@ -12,8 +12,7 @@ export function BooksProvider({ children }) {
   const [books, setBooks] = useState([]);
   const { user } = useUser();
 
-  // ✅ FETCH ALL BOOKS FOR LOGGED-IN USER
-  async function fetchBooksById() {
+  async function fetchBooks() {
     if (!user) return;
 
     try {
@@ -30,7 +29,18 @@ export function BooksProvider({ children }) {
     }
   }
 
-  // ✅ CREATE BOOK
+  async function fetchBooksById(id) {
+    try {
+      return await databases.getDocument(
+        DATABASE_ID,
+        COLLECTION_ID,
+        id
+      );
+    } catch (error) {
+      console.error("Fetch book by ID error:", error.message);
+    }
+  }
+
   async function createBook(data) {
     if (!user) return;
 
@@ -51,7 +61,6 @@ export function BooksProvider({ children }) {
     }
   }
 
-  // ✅ DELETE BOOK
   async function deleteBook(id) {
     try {
       await databases.deleteDocument(
@@ -65,40 +74,39 @@ export function BooksProvider({ children }) {
   }
 
   useEffect(() => {
-  if (!user) {
-    setBooks([]);
-    return;
-  }
-
-  fetchBooksById();
-
-  const channel = `databases.${DATABASE_ID}.collections.${COLLECTION_ID}.documents`;
-
-  const unsubscribe = client.subscribe(channel, (response) => {
-    if (!response?.events || !response.payload) return;
-
-    if (response.events.some(e => e.endsWith(".create"))) {
-      setBooks(prev =>
-        prev.some(b => b.$id === response.payload.$id)
-          ? prev
-          : [...prev, response.payload]
-      );
+    if (!user) {
+      setBooks([]);
+      return;
     }
 
-    if (response.events.some(e => e.endsWith(".delete"))) {
-      setBooks(prev =>
-        prev.filter(book => book.$id !== response.payload.$id)
-      );
-    }
-  });
+    fetchBooks();
 
-  return () => unsubscribe();
-}, [user]);
+    const channel = `databases.${DATABASE_ID}.collections.${COLLECTION_ID}.documents`;
 
+    const unsubscribe = client.subscribe(channel, (response) => {
+      if (!response?.events || !response.payload) return;
+
+      if (response.events.some(e => e.endsWith(".create"))) {
+        setBooks(prev =>
+          prev.some(b => b.$id === response.payload.$id)
+            ? prev
+            : [...prev, response.payload]
+        );
+      }
+
+      if (response.events.some(e => e.endsWith(".delete"))) {
+        setBooks(prev =>
+          prev.filter(book => book.$id !== response.payload.$id)
+        );
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   return (
     <BooksContext.Provider
-      value={{ books, createBook, deleteBook, fetchBooksById }}
+      value={{ books, fetchBooks, fetchBooksById, createBook, deleteBook }}
     >
       {children}
     </BooksContext.Provider>
